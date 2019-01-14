@@ -6,7 +6,7 @@ Created with [a tutorial by Andre Madarang](https://www.youtube.com/watch?v=Fl7-
 + [vue-cli-3](https://cli.vuejs.org/)
 + [vue-cli-plugin-electron-builder](https://github.com/nklayman/vue-cli-plugin-electron-builder)
 
-##Written in:
+## Written in:
 + Electron
 + Vuejs
 
