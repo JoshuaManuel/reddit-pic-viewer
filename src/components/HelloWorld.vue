@@ -1,42 +1,43 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+     <ul class="list-group list-group-flush">
+      <li class="list-group-item" v-for="post in posts" :key="post.data.id" @click="openImage(post.data.preview.images[0].source.url)">
+          <img :src="post.data.thumbnail" alt="thumb" class="thumbnail">
+          {{post.data.title}}
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
+const axios = require("axios")
+const {ipcRenderer} = require("electron")
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  data() {
+      return {
+          posts: []
+      }
+  },
+  created() {
+      axios.get("https://reddit.com/r/pics.json")
+      .then(response => {
+          this.posts = response.data.data.children
+      })
+      .check(error => {
+          console.log(error)
+      })
+  },
+  methods: {
+    openImage(image) {
+        ipcRenderer.send("toggle-image", image)
+      }
   }
 }
+
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -54,5 +55,88 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.thumbnail {
+    width: 60px;
+    height:60px;
+    border-radius: 30px;
+    margin-right: 16px;
+}
+
+.list-group-item {
+    cursor: pointer
+}
+
+.list-group-item:hover {
+    background-color: #eee;
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+
+  // No need to set list-style: none; since .list-group-item is block level
+  padding-left: 0; // reset padding because ul and ol
+  margin-bottom: 0;
+}
+
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: $list-group-item-padding-y $list-group-item-padding-x;
+  // Place the border on the list items and negative margin up for better styling
+  margin-bottom: -$list-group-border-width;
+  background-color: $list-group-bg;
+  border: $list-group-border-width solid $list-group-border-color;
+
+  &:first-child {
+    @include border-top-radius($list-group-border-radius);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+    @include border-bottom-radius($list-group-border-radius);
+  }
+
+  &.disabled,
+  &:disabled {
+    color: $list-group-disabled-color;
+    pointer-events: none;
+    background-color: $list-group-disabled-bg;
+  }
+
+  // Include both here for `<a>`s and `<button>`s
+  &.active {
+    z-index: 2; // Place active items above their siblings for proper border styling
+    color: $list-group-active-color;
+    background-color: $list-group-active-bg;
+    border-color: $list-group-active-border-color;
+  }
+}
+
+.list-group-flush {
+  .list-group-item {
+    border-right: 0;
+    border-left: 0;
+    @include border-radius(0);
+
+    &:last-child {
+      margin-bottom: -$list-group-border-width;
+    }
+  }
+
+  &:first-child {
+    .list-group-item:first-child {
+      border-top: 0;
+    }
+  }
+
+  &:last-child {
+    .list-group-item:last-child {
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+  }
 }
 </style>

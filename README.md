@@ -1,29 +1,15 @@
-# biblio
+# Reddit r/pics Viewer
 
-## Project setup
-```
-npm install
-```
+Created with [a tutorial by Andre Madarang](https://www.youtube.com/watch?v=Fl7---SEORQ)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Uses:
++ [vue-cli-3](https://cli.vuejs.org/)
++ [vue-cli-plugin-electron-builder](https://github.com/nklayman/vue-cli-plugin-electron-builder)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+##Written in:
++ Electron
++ Vuejs
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Differences as of January 2019:
++ The reddit API now requires that the URL to grab the full-size pictures be unescaped first
++ The console command to run the app is now: `npm run electron:serve`
